@@ -1,0 +1,9 @@
+---
+description: "Archetect Model Casing"
+authors: ["Jimmie Fulton <jimmie.fulton@naxgrp.com>"]
+languages: []
+frameworks: []
+tags: []
+
+requires:
+  archetect: "2.0.0-ALPHA.15"
