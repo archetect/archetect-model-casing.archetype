@@ -6,8 +6,13 @@ if ANSWERS.applications != () {
     context.applications = case_applications(ANSWERS.applications);
 }
 
-if ANSWERS.model != () {
+if type_of(ANSWERS.model) == "map" {
     context.model = case_model(ANSWERS.model);
+} else if ANSWERS.default_model != () {
+    let model = generate_model(ANSWERS.default_model);
+    if type_of(model) == "map" {
+        context.model = case_model(model);
+    }
 }
 
 fn case_applications(applications) {
@@ -86,6 +91,44 @@ fn case_field(field) {
         });
     }
     field
+}
+
+fn generate_model(model) {
+    if type_of(model) == "list" {
+        let entities = #{};
+
+        for entity_key in model {
+            entities[entity_key] = generate_entity(entity_key);
+        }
+
+        return #{
+            "entities": entities,
+        };
+    }
+
+    if type_of(model) == "string" {
+        let entities = #{};
+        let entity_key = model;
+        entities[entity_key] = generate_entity(entity_key);
+
+        return #{
+            "entities": entities,
+        }
+    }
+}
+
+fn generate_entity(name) {
+    let entity = #{
+        name: name,
+        fields: #{
+            contents: #{
+                name: "contents",
+                type: "String",
+                required: true,
+            },
+        },
+    };
+    entity
 }
 
 if switch_enabled("debug-context") {

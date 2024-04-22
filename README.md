@@ -2,9 +2,6 @@
 
 This is an [Archetect](https://archetect.github.io/) archetype.
 
-This archetype expands cases for sets of applications and models. It is intended to be used as a library
-for parent archetypes to expand model casing such that pre-expanded models do not have to be supplied.
-
 ## Rendering
 
 To generate content from this Archetype, copy and execute the following command:
@@ -13,9 +10,13 @@ To generate content from this Archetype, copy and execute the following command:
   archetect render https://github.com/archetect/archetect-model-casing.archetype.git
 ```
 
-## Example
+## Usage
 
-With a YAML answer file `answers.yaml` containing one or more application sets and model:
+This archetype expands cases for sets of applications and models. It is intended to be used as a component library
+for parent archetypes to expand model casing such that pre-expanded models do not have to be supplied to archetypes
+that required a strongly-cased model.
+
+With a YAML answer file `answers.yaml` containing one or more application sets and/or a model:
 
 ```yaml
 applications:
@@ -31,7 +32,7 @@ applications:
           fields:
             id:
               name: id
-              type: Uuid
+              type: ID
             content:
               name: content
               type: String
@@ -42,13 +43,22 @@ model:
       fields:
         id:
           name: id
-          type: Uuid
+          type: ID
         first_name:
           name: first_name
           type: String
         last_name:
           name: last_name
           type: String
+        middle_name:
+          name: middle_name
+          type: String
+          optional: true
+        aliases:
+          name: aliases
+          type: String
+          optional: true
+          repeated: true
 ```
 
 Running the following archetect command:
@@ -96,7 +106,8 @@ applications:
               fieldName: id
               field_name: id
               name: id
-              type: Uuid
+              pk: true
+              type: ID
           name: catalog
     prefix: catalog
     project-name: catalog-service
@@ -121,6 +132,17 @@ model:
       entityName: cart
       entity_name: cart
       fields:
+        aliases:
+          FIELD_NAME: ALIASES
+          FieldName: Aliases
+          field-name: aliases
+          field-title: Aliases
+          fieldName: aliases
+          field_name: aliases
+          name: aliases
+          optional: true
+          repeated: true
+          type: String
         first_name:
           FIELD_NAME: FIRST_NAME
           FieldName: FirstName
@@ -138,7 +160,8 @@ model:
           fieldName: id
           field_name: id
           name: id
-          type: Uuid
+          pk: true
+          type: ID
         last_name:
           FIELD_NAME: LAST_NAME
           FieldName: LastName
@@ -148,5 +171,22 @@ model:
           field_name: last_name
           name: last_name
           type: String
+        middle_name:
+          FIELD_NAME: MIDDLE_NAME
+          FieldName: MiddleName
+          field-name: middle-name
+          field-title: Middle Name
+          fieldName: middleName
+          field_name: middle_name
+          name: middle_name
+          optional: true
+          repeated: true
+          type: String
       name: cart
 ```
+
+### Default Models
+
+This archetype may also take an optional `default_model` in the form of a String or List of strings, and a basic model 
+will be generated.  This allows an archetype to call this archetype as a library, and either case a model passed to the parent,
+or case a generic default model instead.
